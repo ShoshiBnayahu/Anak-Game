@@ -30,3 +30,25 @@
 *.exe
 *.out
 *.app
+
+# Ignore build artifacts
+build/
+*.exe
+*.out
+
+# Ignore generated files
+.vs/
+ipch/
+debug/
+release/
+*.obj
+*.o
+
+# Ignore editor/IDE specific files
+*.suo
+*.user
+*.sdf
+
+# Ignore dependency directories
+bin/
+lib/
