@@ -21,34 +21,40 @@ class Tile
 protected:
 
 	std::pair<std::string, int> tile;
-	//x
-	const int weight= ReadJson::SizeOfTiles[1];
-	//y
-	const int height = ReadJson::SizeOfTiles[0];
+	const int weight = ReadJson::sizeOfTiles[1];
+	const int height = ReadJson::sizeOfTiles[0];
 
-	std::unordered_map<std::pair<int, int>, People> peoples;
+	std::unordered_map<std::pair<int, int>, People>peoples;
 
+	std::unordered_map<string, int> resources;
 
-    
 
 
 public:
 	Tile(int tailNum);
 	std::pair<string, int>& getTile() { return tile; };
+	std::vector<int> selectedResource();
+	const std::unordered_map<std::string, int>& getResources() const {
+		return resources;
+	}
+	const std::unordered_map<std::pair<int, int>, People>& getPeople() const {
+		return peoples;
+	}
+	void addPeople(int x, int y);
+	void subPeople(int x, int y);
+	virtual ~Tile() {}
+
 };
 
 class TileResource : public Tile {
 private:
-    std::unordered_map<std::pair<int, int>, Resource> resources;
     std::string resourceType;
-
-
 public:
 	TileResource(int tailNum);
-
 	std::string getResourceType() { return resourceType; };
+	//void addResource(int x, int y, int amount);
+	void addResource( int amount);
+	void subResource(int amount);
 
-	void addResource(int x, int y, int amount);
 
-   
 };

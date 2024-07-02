@@ -1,8 +1,10 @@
 #include "ReadJson.h"
 nlohmann::json ReadJson::config;
-vector<int> ReadJson::SizeOfTiles;
-unordered_map<int, string> ReadJson::Tiles;
+vector<int> ReadJson::sizeOfTiles;
+unordered_map<int, string> ReadJson::tiles;
 std::vector<std::string>ReadJson::resourceTypes;
+unordered_map<string, int> ReadJson::rains;
+
 void ReadJson::init()
 {
     ifstream f("configuration.json");
@@ -12,9 +14,10 @@ void ReadJson::init()
     }
     try {
         f >> config;
-        SizeOfTiles = getSizeOfTiles();
-        Tiles = getTiles();
+        sizeOfTiles = getSizeOfTiles();
+        tiles = getTiles();
         resourceTypes = getResourceTypes();
+        rains = getRains();
     }
     catch (const json::parse_error& e) {
         cerr << "Error parsing JSON: " << e.what() << endl;
@@ -44,9 +47,17 @@ vector<std::string>& ReadJson::getResourceTypes()
 {
     static vector<std::string> resourceTypes;
     if (config.contains("ResourceTypes")) {
-        for (const auto item : config["ResourceTypes"]) {
+        for (const auto item : config["ResourceTypes"])
             resourceTypes.push_back(item);
-        }
     }
     return resourceTypes;
+}
+unordered_map<string, int>& ReadJson::getRains()
+{
+   static unordered_map<string, int> rains;
+    if (config.contains("Rains")) {
+        for (const auto item : config["Rains"].items()) 
+            rains[item.key()] = item.value().get<int>();
+    }
+    return rains;
 }

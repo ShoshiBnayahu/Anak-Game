@@ -1,180 +1,95 @@
-//// Game.cpp : This file contains the 'main' function. Program execution begins and ends there.
-////
-//
-//#include <iostream>
-//#include <string>
-//#include "World.h"
-//#include "Input.h"
-//
-//
-//
-//int main() {
-//
-//	//world map
-//	Input myInput;
-//	myInput.parse_and_store();
-//	World world(myInput.world->data);
-//	int select1 = stoi(myInput.steps[0]->arguments[0]);
-//	int select2 = stoi(myInput.steps[0]->arguments[1]);
-//	//for (auto cmd : myInput.start) {
-//	// .....
-//	//for (auto step : myInput.steps) {
-//	//......
-//	
-//	//for (string step : myInput.asserts) {
-//	std::string category = world.selectedCategory(select1 - 1, select2 - 1);
-//	std::cout << "SelectedCategory " << category;
-//
-//	
-//
-//	// Resrouce Usage
-//	//Input myInput;
-//	//myInput.parse_and_store();
-//	//World world(myInput.world->data);
-//	//ReadJson readJson;
-	////for (auto cmd : myInput.start) {
-	////	string name = cmd->name;
-	////		if (name == Command::RESOURCE) {
-	////			int amount= stoi(cmd->arguments[0]);
-	////			string name = cmd->arguments[1];
-	////			int x= stoi(cmd->arguments[2]);
-	////			int y= stoi(cmd->arguments[3]);
-	////			if (kind == "Wood") {
-	////				if (world.selectedCategory(x - 1, y - 1) == "Forest")
-	////					world.addResourse(x, y);
-//	//				   	
-//	//			}
-//	//		}
-//	//		if (name == Command::PEOPLE) {
-//	//			/*People $number $x $y : Should place $number of people at the $x $y world location
-//	//				Should happen in the infrastructure at the given location if 
-//	//				possible(have capacity) or simply at the world location if no infrastructure exists*/
-//	//		}
-//	//		if (name == Command::MANUFACTURE) {
-//
-//	//			   
-//	//		}
-//	//		if (name == Command::BUILD) {
-//
-//
-//	//		}
-//	//		if (name == Command::RAIN) {
-//
-//
-//	//		}
-//	//		if (name == Command::WAIT) {
-//
-//
-//	//		}
-//	//		if (name == Command::SELECT) {
-//
-//
-//	//		}
-//
-//	//}
-//
-//	//for (auto step : myInput.steps) {
-//	//	string name = step->name;
-//	//	if (name == Command::RESOURCE) {
-//	//		int amount = stoi(step->arguments[0]);
-//	//		string kind = step->arguments[1];
-//	//		int x = stoi(step->arguments[2]);
-//	//		int y = stoi(step->arguments[3]);
-//	//		if (kind == "Wood") {
-//	//			if (world.selectedCategory(x - 1, y - 1) == "Forest")
-//	//				world.addResourse(x, y);
-//
-//	//		}
-//	//	}
-//	//	if (name == Command::PEOPLE) {
-//	//		/*People $number $x $y : Should place $number of people at the $x $y world location
-//	//			Should happen in the infrastructure at the given location if
-//	//			possible(have capacity) or simply at the world location if no infrastructure exists*/
-//	//	}
-//	//	if (name == Command::MANUFACTURE) {
-//
-//
-//	//	}
-//	//	if (name == Command::BUILD) {
-//
-//
-//	//	}
-//	//	if (name == Command::RAIN) {
-//
-//
-//	//	}
-//	//	if (name == Command::WAIT) {
-//
-//
-//	//	}
-//	//	if (name == Command::SELECT) {
-//
-//	//		int x = stoi(step->arguments[0]);
-//	//		int y = stoi(step->arguments[1]);
-//	//		std::string resource = world.selectedResource(x-1, y-1);
-//	//		std::cout << "SelectedResource " << resource; 
-//	//	}
-//
-//	//	std::cout << step->name << "\t" << "\t" << step->arguments[0] << " \t" << step->arguments[1] << step->arguments[2] << step->arguments[3] << "\n";
-//	//}
-//
-//
-//	/*std::string category = world.selectedCategory(select1 - 1, select2 - 1);
-//	std::cout << "SelectedCategory " << category;*/
-//
-//}
-//
-//
-//// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-//// Debug program: F5 or Debug > Start Debugging menu
-//
-//// Tips for Getting Started: 
-////   1. Use the Solution Explorer window to add/manage files
-////   2. Use the Team Explorer window to connect to source control
-////   3. Use the Output window to see build output and other messages
-////   4. Use the Error List window to view errors
-////   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-////   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
-#include <iostream>
-#include <string>
-#include "World.h"
-#include "Input.h"
-#include "ReadJson.h"
-#include <unordered_map>
+#include "Game.h"
 
-
-using namespace std;
-int main()
+void Game::startGame()
 {
-	ReadJson::init();
-	Input myInput;
-	myInput.parse_and_store();
-	World myWorld(myInput.world->data);
+	input.parse_and_store();
+	world.fillGrid(input.world->data);
+	readCommand();
+}
 
-	/*+World
-		3 1 4
-		1 1 1
-		5 1 6
-		+ Start
-		Resource 1 Wood 1 1
-		+ Input
-		Select 1 1
-		+ Asserts
-		SelectedResource*/
+void Game::readCommand()
+{
+	readStartCommand();
+	readInputCommand();
+	readAssertCommand();
+}
 
-		string name = myInput.start[0]->name;
-		//if (name == Command::RESOURCE) {
-		int amount = stoi(myInput.start[0]->arguments[0]);
-		string resourceName = myInput.start[0]->arguments[1];
-		int x = stoi(myInput.start[0]->arguments[2]);
-		int y = stoi(myInput.start[0]->arguments[3]);
+void Game::readStartCommand()
+{
+	for (auto& cmd : input.start)
+		selectCommand(cmd);
+}
 
-		myWorld.insertResource(amount, resourceName, x, y);
-		std::cout << "SelectedResource ";
-		for (int a : myWorld.selectedResource())
-		{
-			std::cout << a << " ";
-		}
+void Game::readInputCommand()
+{
+	for (auto& cmd : input.steps)
+		selectCommand(cmd);
+}
 
-	return 0;
+void Game::readAssertCommand()
+{
+	for (auto cmd : input.asserts)
+		selectAssertCommand(cmd);
+}
+
+void Game::selectCommand(const std::shared_ptr<Command>& cmd)
+{
+	if (cmd.get()->name == Command::RESOURCE)
+		resource(cmd.get());
+	else if (cmd.get()->name == Command::PEOPLE)
+		people(cmd.get());
+	/*else if (cmd.get()->name == Command::BUILD)
+		build(cmd.get());*/
+
+	if (cmd.get()->name == Command::SELECT)
+		select(cmd.get());
+	else if (cmd.get()->name == Command::RAIN)
+		rain(cmd.get());
+	else if (cmd.get()->name == Command::WAIT)
+		wait(cmd.get());
+	else if (cmd.get()->name == Command::WORK)
+		work(cmd.get());
+}
+
+void Game::selectAssertCommand(const string& cmd)
+{
+	if (cmd == "SelectedResource") {
+		cout << "SelectedResource ";
+		for (auto res : world.selectedResource(cell))
+			cout << res << " ";
+	}
+		
+	else if (cmd == "SelectedCategory")
+		cout << "SelectedCategory " << world.selectedCategory(cell);
+}
+
+void Game::resource(Command* command)
+{
+	world.insertResource(std::stoi(command->arguments[0]), command->arguments[1], std::stoi(command->arguments[2]), std::stoi(command->arguments[3]));
+}
+
+void Game::people(Command* comand)
+{
+	world.insertPeople(std::stoi(comand->arguments[0]), std::stoi(comand->arguments[1]), std::stoi(comand->arguments[2]));
+}
+
+void Game::select(Command* comand)
+{
+	cell = std::pair<int, int>(std::stoi(comand->arguments[0]), std::stoi(comand->arguments[1]));
+
+}
+
+void Game::wait(Command* comand)
+{
+	for (size_t i = 0; i < std::stoi(comand->arguments[0]); i++);
+}
+
+void Game::work(Command* comand)
+{
+	world.peopleWork(cell, std::pair<int, int>(std::stoi(comand->arguments[0]), std::stoi(comand->arguments[1])));
+}
+
+void Game::rain(Command* comand)
+{
+	world.rainFall(std::stoi(comand->arguments[0]));
 }
