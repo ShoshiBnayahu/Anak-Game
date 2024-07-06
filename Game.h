@@ -15,12 +15,15 @@ public:
 	void readStartCommand();
 	void readInputCommand();
 	void readAssertCommand();
-	void selectCommand(const std::shared_ptr<Command>& cmd);
+	void selectStartCommand(const std::shared_ptr<Command>& cmd);
+	void selectInputCommand(const std::shared_ptr<Command>& cmd);
 	void selectAssertCommand(const string& cmd);
 	void resource(Command* command);
 	void people(Command* comand);
 	void select(Command* comand);
 	void wait(Command* comand);
 	void work(Command* comand);
-	void rain(Command* comand);		
+	void rain(Command* comand);
+	void build(Command* comand, bool isComplate);
+	void makeEmpty(Command* comand);
 };

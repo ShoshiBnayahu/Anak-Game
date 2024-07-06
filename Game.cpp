@@ -3,7 +3,8 @@
 void Game::startGame()
 {
 	input.parse_and_store();
-	world.fillGrid(input.world->data);
+	world.fillTileGrid(input.world->data);
+	world.fillCellGrid();
 	readCommand();
 }
 
@@ -17,13 +18,13 @@ void Game::readCommand()
 void Game::readStartCommand()
 {
 	for (auto& cmd : input.start)
-		selectCommand(cmd);
+		selectStartCommand(cmd);
 }
 
 void Game::readInputCommand()
 {
 	for (auto& cmd : input.steps)
-		selectCommand(cmd);
+		selectInputCommand(cmd);
 }
 
 void Game::readAssertCommand()
@@ -32,23 +33,39 @@ void Game::readAssertCommand()
 		selectAssertCommand(cmd);
 }
 
-void Game::selectCommand(const std::shared_ptr<Command>& cmd)
+void Game::selectStartCommand(const std::shared_ptr<Command>& cmd)
 {
 	if (cmd.get()->name == Command::RESOURCE)
 		resource(cmd.get());
 	else if (cmd.get()->name == Command::PEOPLE)
 		people(cmd.get());
-	/*else if (cmd.get()->name == Command::BUILD)
-		build(cmd.get());*/
-
+	else if (cmd.get()->name == Command::BUILD)
+		build(cmd.get(),true);
 	if (cmd.get()->name == Command::SELECT)
 		select(cmd.get());
 	else if (cmd.get()->name == Command::RAIN)
 		rain(cmd.get());
-	else if (cmd.get()->name == Command::WAIT)
-		wait(cmd.get());
 	else if (cmd.get()->name == Command::WORK)
 		work(cmd.get());
+	else if (cmd.get()->name == Command::MAKE_EMPTY)
+		makeEmpty(cmd.get());
+}
+void Game::selectInputCommand(const std::shared_ptr<Command>& cmd)
+{
+	if (cmd.get()->name == Command::RESOURCE)
+		resource(cmd.get());
+	else if (cmd.get()->name == Command::PEOPLE)
+		people(cmd.get());
+	else if (cmd.get()->name == Command::BUILD)
+		build(cmd.get(),false);
+	if (cmd.get()->name == Command::SELECT)
+		select(cmd.get());
+	else if (cmd.get()->name == Command::RAIN)
+		rain(cmd.get());
+	else if (cmd.get()->name == Command::WORK)
+		work(cmd.get());
+	else if (cmd.get()->name == Command::MAKE_EMPTY)
+		makeEmpty(cmd.get());
 }
 
 void Game::selectAssertCommand(const string& cmd)
@@ -57,10 +74,26 @@ void Game::selectAssertCommand(const string& cmd)
 		cout << "SelectedResource ";
 		for (auto res : world.selectedResource(cell))
 			cout << res << " ";
+		cout << std::endl;
 	}
-		
+
 	else if (cmd == "SelectedCategory")
-		cout << "SelectedCategory " << world.selectedCategory(cell);
+		cout << "SelectedCategory " << world.selectedCategory(cell) << std::endl;
+
+	else if (cmd == "SelectedComplete")
+		cout << "SelectedComplete " << world.selectedComplete(cell) << endl;
+
+	else if (cmd == "SelectedPeople")
+		cout << "selectedPeople " << world.selectedPeople(cell) << endl;
+
+	else if (cmd == "CityCount")
+		cout << "CityCount " << world.cityCount() <<std::endl;
+
+	else if (cmd == "VillageCount")
+		cout << "VillageCount " << world.villageCount() << std::endl;
+
+	else if (cmd == "RoadCount")
+		cout << "RoadCount " << world.roadCount() << std::endl;
 }
 
 void Game::resource(Command* command)
@@ -92,4 +125,11 @@ void Game::work(Command* comand)
 void Game::rain(Command* comand)
 {
 	world.rainFall(std::stoi(comand->arguments[0]));
+}
+
+void Game::build(Command* comand ,bool isComplate) {
+	world.buildGroundObject(comand->arguments[0], std::stoi(comand->arguments[1]), std::stoi(comand->arguments[2]), isComplate);
+}
+void Game::makeEmpty(Command* comand) {
+	world.makeEmpty(std::stoi(comand->arguments[0]), std::stoi(comand->arguments[1]));
 }

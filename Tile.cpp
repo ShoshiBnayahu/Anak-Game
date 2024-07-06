@@ -9,9 +9,9 @@ Tile::Tile(int tailNum)
 std::vector<int> Tile::selectedResource()
 {
 	std::vector<int> amount;
-	for (std::string res : ReadJson::resourceTypes) {
-		if (resources.find(res) != resources.end())
-			amount.push_back(resources.at(res));
+	for (const auto& res : ReadJson::resourceTypes) {
+		if (resources.find(res.first) != resources.end())
+			amount.push_back(resources.at(res.first));
 		else
 			amount.push_back(0);
 	}
@@ -32,7 +32,8 @@ void Tile::subPeople(int x, int y)
 
 
 TileResource::TileResource(int tailNum) : Tile(tailNum) {
-	resourceType = ReadJson::resourceTypes[tailNum - 3];
+	resourceType = ReadJson::tilesResourceType[tile.first];
+	///An initial value determination must be added according to the JSON
 	///resources[resourceType]=readJson start amount of this resource
 	resources [resourceType] = 0;
 }

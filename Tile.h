@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include "ReadJson.h"
-#include "Resource.h"
 #include "People.h"
 
 namespace std {
@@ -21,8 +20,8 @@ class Tile
 protected:
 
 	std::pair<std::string, int> tile;
-	const int weight = ReadJson::sizeOfTiles[1];
-	const int height = ReadJson::sizeOfTiles[0];
+	const int weight = ReadJson::sizes["Tile"][1];
+	const int height = ReadJson::sizes["Tile"][0];
 
 	std::unordered_map<std::pair<int, int>, People>peoples;
 
