@@ -127,10 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AirTransport.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GroundObject.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="GroundTransportation.cpp" />
     <ClCompile Include="ReadJson.cpp" />
     <ClCompile Include="Settlement.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -144,8 +146,10 @@
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GroundObject.h" />
+    <ClInclude Include="AirTransport.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="GroundTransportation.h" />
     <ClInclude Include="People.h" />
     <ClInclude Include="ReadJson.h" />
     <ClInclude Include="Settlement.h" />

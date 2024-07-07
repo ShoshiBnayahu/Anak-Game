@@ -1,13 +1,10 @@
 #include "ReadJson.h"
 nlohmann::json ReadJson::config;
-//vector<int> ReadJson::sizeOfTiles;
 unordered_map<int, string> ReadJson::tiles;
-//std::vector<std::string>ReadJson::resourceTypes;
 unordered_map<string, int> ReadJson::resourceTypes;
-
+unordered_map<string, string> ReadJson::tilesResourceType;
 unordered_map<string, int> ReadJson::rains;
 unordered_map<string, std::vector<int>> ReadJson::sizes;
-unordered_map<string, string> ReadJson::tilesResourceType;
 unordered_map<string, std::vector<int>>ReadJson::costs;
 unordered_map<string, std::vector<int>>ReadJson::capacities;
 
@@ -24,9 +21,9 @@ void ReadJson::init()
         //sizeOfTiles = getSizeOfTiles();
         tiles = getTiles();
         resourceTypes = getResourceTypes();
+        tilesResourceType = getTilesResourceType();
         rains = getRains();
         sizes = getSizes();
-        tilesResourceType = getTilesResourceType();
         costs = getCosts();
         capacities = getCapacities();
     }
@@ -34,6 +31,7 @@ void ReadJson::init()
         cerr << "Error parsing JSON: " << e.what() << endl;
     }
 }
+
 unordered_map<int, string>& ReadJson::getTiles()
 {
     static unordered_map<int, string> tiles;
@@ -60,6 +58,8 @@ unordered_map<string, int>& ReadJson::getResourceTypes()
 
     return resourceTypes;
 }
+
+
 unordered_map<string, string>& ReadJson::getTilesResourceType()
 {
     //כתבתי ידנית מידע שהיה חסר בגסון
@@ -70,7 +70,6 @@ unordered_map<string, string>& ReadJson::getTilesResourceType()
     tilesResourceType["BlocksMine"] = "Blocks";
     return tilesResourceType;
 }
-
 
 //vector<std::string>& ReadJson::getResourceTypes()
 //{
@@ -84,13 +83,14 @@ unordered_map<string, string>& ReadJson::getTilesResourceType()
 
 unordered_map<string, int>& ReadJson::getRains()
 {
-   static unordered_map<string, int> rains;
+    static unordered_map<string, int> rains;
     if (config.contains("Rains")) {
-        for (const auto item : config["Rains"].items()) 
+        for (const auto item : config["Rains"].items())
             rains[item.key()] = item.value().get<int>();
     }
     return rains;
 }
+
 
 unordered_map<string, std::vector<int>>& ReadJson::getSizes()
 {
@@ -113,6 +113,7 @@ unordered_map<string, std::vector<int>>&ReadJson::getCosts()
     }
     return costs;
 }
+
 unordered_map<string, std::vector<int>>& ReadJson::getCapacities()
 {
     static std::unordered_map<string, std::vector<int>> capacities;

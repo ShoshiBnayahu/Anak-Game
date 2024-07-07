@@ -25,5 +25,6 @@ public:
 	void work(Command* comand);
 	void rain(Command* comand);
 	void build(Command* comand, bool isComplate);
+	void manufactur(Command* comand);
 	void makeEmpty(Command* comand);
 };

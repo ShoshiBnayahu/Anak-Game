@@ -47,9 +47,12 @@ void Game::selectStartCommand(const std::shared_ptr<Command>& cmd)
 		rain(cmd.get());
 	else if (cmd.get()->name == Command::WORK)
 		work(cmd.get());
+	else if (cmd.get()->name == Command::MANUFACTURE)
+		manufactur(cmd.get());
 	else if (cmd.get()->name == Command::MAKE_EMPTY)
 		makeEmpty(cmd.get());
 }
+
 void Game::selectInputCommand(const std::shared_ptr<Command>& cmd)
 {
 	if (cmd.get()->name == Command::RESOURCE)
@@ -64,8 +67,11 @@ void Game::selectInputCommand(const std::shared_ptr<Command>& cmd)
 		rain(cmd.get());
 	else if (cmd.get()->name == Command::WORK)
 		work(cmd.get());
+	else if (cmd.get()->name == Command::MANUFACTURE)
+		manufactur(cmd.get());
 	else if (cmd.get()->name == Command::MAKE_EMPTY)
 		makeEmpty(cmd.get());
+
 }
 
 void Game::selectAssertCommand(const string& cmd)
@@ -76,7 +82,6 @@ void Game::selectAssertCommand(const string& cmd)
 			cout << res << " ";
 		cout << std::endl;
 	}
-
 	else if (cmd == "SelectedCategory")
 		cout << "SelectedCategory " << world.selectedCategory(cell) << std::endl;
 
@@ -130,6 +135,11 @@ void Game::rain(Command* comand)
 void Game::build(Command* comand ,bool isComplate) {
 	world.buildGroundObject(comand->arguments[0], std::stoi(comand->arguments[1]), std::stoi(comand->arguments[2]), isComplate);
 }
+
+void Game::manufactur(Command* comand) {
+	world.insertManufactur(comand->arguments[0], std::stoi(comand->arguments[1]), std::stoi(comand->arguments[2]));
+}
+
 void Game::makeEmpty(Command* comand) {
 	world.makeEmpty(std::stoi(comand->arguments[0]), std::stoi(comand->arguments[1]));
 }

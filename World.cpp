@@ -2,8 +2,6 @@
 #include "Road.h"
 #include "Settlement.h"
 
-
-
 void World::fillTileGrid(const std::vector<std::vector<std::string>>& data)
 {
 
@@ -66,6 +64,7 @@ void World::buildGroundObject(std::string type, int x, int y , bool isComplate)
             for (int j = x - 1; j < x - 1+ ReadJson::sizes["City"][0]; j++)
                 cellGrid[i][j]->setGroundObject(groundObjects.back());
 }
+
 Settlement* World::isSettlement(std::pair<int, int> cell)
 {
     if (cellGrid[cell.second - 1][cell.first - 1]->getGroundObject()) {
@@ -76,6 +75,7 @@ Settlement* World::isSettlement(std::pair<int, int> cell)
     }
     return nullptr;
 }
+
 bool World::canBuild(int x, int y, int sizeX, int sizeY) {
     int road = ReadJson::sizes["Road"][0];
     for (size_t i = x + road - 1; y - 1 >= 0 && i < x + sizeX - road + 1; i++)
@@ -93,7 +93,6 @@ bool World::canBuild(int x, int y, int sizeX, int sizeY) {
     return false;
 }
 
-
 Tile*& World::selectTile(int x, int y)
 {
     return tileGrid[(y - 1) / ReadJson::sizes["Tile"][0]][(x - 1) / ReadJson::sizes["Tile"][1]];
@@ -103,8 +102,6 @@ std::string World::selectedComplete(std::pair<int, int> cell)
 {
     return cellGrid[cell.second - 1][cell.first - 1]->getGroundObject()->isComplete() ? "true" : "false";
 }
-
-
 
 //bool World::insertResource(int amount, string resource, int x, int y)
 //{
@@ -132,6 +129,7 @@ std::string World::selectedComplete(std::pair<int, int> cell)
 //    amount.pop_back();
 //    return amount;
 //}
+
 bool World::insertResource(int amount, string resource, int x, int y)
 {
     Settlement* s = isSettlement(std::pair<int, int>(x, y));
@@ -147,8 +145,6 @@ bool World::insertResource(int amount, string resource, int x, int y)
     tr->addResource(amount);
     return true;
 }
-
-
 
 std::vector<int> World::selectedResource(std::pair<int, int>cell)
 {
@@ -209,31 +205,30 @@ void World::rainFall(int amount)
         rl.second =( amount + rl.second) % ReadJson::rains[rl.first];
     
 }
+
+void World::insertManufactur(std::string type, int x, int y) {
+
+}
+
 int World::cityCount()
 {
     return Settlement::getCityCounter();
 }
+
 int World::villageCount()
 {
     return Settlement::getVillageCounter();
 }
+
 int World::roadCount()
 {
     return Road::getRoadCounter();
 }
 
-
 void World::makeEmpty(int x, int y) {
     if (cellGrid[y - 1][x - 1]->getGroundObject())
         cellGrid[y - 1][x - 1]->getGroundObject()->makeEmpty();
 }
-
-
-
-////////need continue!!!
-///add makeEmpty function
-
-
 
 
 

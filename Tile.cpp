@@ -6,6 +6,7 @@ Tile::Tile(int tailNum)
 	tile.first = name;
 	tile.second = tailNum;
 }
+
 std::vector<int> Tile::selectedResource()
 {
 	std::vector<int> amount;
@@ -19,10 +20,12 @@ std::vector<int> Tile::selectedResource()
 	amount.pop_back();
 	return amount;
 }
+
 void Tile::addPeople(int x, int y)
 {
 	peoples[pair<int, int>(x, y)] = People();
 }
+
 void Tile::subPeople(int x, int y)
 {
 	auto p = peoples.find(std::pair<int, int>(x, y));
@@ -30,16 +33,12 @@ void Tile::subPeople(int x, int y)
 		peoples.erase(p);
 }
 
-
 TileResource::TileResource(int tailNum) : Tile(tailNum) {
 	resourceType = ReadJson::tilesResourceType[tile.first];
 	///An initial value determination must be added according to the JSON
 	///resources[resourceType]=readJson start amount of this resource
 	resources [resourceType] = 0;
 }
-
-
-
 //void TileResource::addResource(int x, int y, int amount)
 //{
 //	if (resources.find(resourceType) == resources.end())
@@ -51,6 +50,7 @@ void TileResource::addResource(int amount)
 {
 	resources[resourceType] += amount;
 }
+
 void TileResource::subResource(int amount)
 {
 	resources[resourceType] -= amount;

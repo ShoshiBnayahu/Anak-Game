@@ -9,7 +9,6 @@ private:
 
 public:
     Settlement(int x, int y, GroundObjectType type, bool isComplete);
-
     static int getCityCounter();
     static int getVillageCounter();
     void makeEmpty() override;

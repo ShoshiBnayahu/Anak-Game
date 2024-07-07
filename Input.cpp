@@ -6,6 +6,7 @@ std::string Input::next_line()
     std::getline(std::cin, line);
     return line;
 }
+
 void Input::parse_and_store()
 {
     // read first command
@@ -55,6 +56,7 @@ void Input::parse_and_store()
         line = next_line();
     }
 }
+
 std::shared_ptr<Command> Input::parse_command(std::string line)
 {
     auto strings = split(line);
