@@ -91,6 +91,12 @@ void Game::selectAssertCommand(const string& cmd)
 	else if (cmd == "SelectedPeople")
 		cout << "selectedPeople " << world.selectedPeople(cell) << endl;
 
+	else if (cmd == "SelectedCar")
+		cout << "SelectedCar " << world.selectedCar(cell) << endl;
+
+	else if (cmd == "SelectedTruck")
+		cout << "SelectedTruck " << world.selectedTruck(cell) << endl;
+
 	else if (cmd == "CityCount")
 		cout << "CityCount " << world.cityCount() <<std::endl;
 
@@ -117,29 +123,36 @@ void Game::select(Command* comand)
 
 }
 
-void Game::wait(Command* comand)
+void Game::wait(Command* command)
 {
-	for (size_t i = 0; i < std::stoi(comand->arguments[0]); i++);
+	for (size_t i = 0; i < std::stoi(command->arguments[0]); i++);
 }
 
-void Game::work(Command* comand)
+void Game::work(Command* command)
 {
-	world.peopleWork(cell, std::pair<int, int>(std::stoi(comand->arguments[0]), std::stoi(comand->arguments[1])));
+	world.peopleWork(cell, std::pair<int, int>(std::stoi(command->arguments[0]), std::stoi(command->arguments[1])));
 }
 
-void Game::rain(Command* comand)
+void Game::rain(Command* command)
 {
-	world.rainFall(std::stoi(comand->arguments[0]));
+	world.rainFall(std::stoi(command->arguments[0]));
 }
 
-void Game::build(Command* comand ,bool isComplate) {
-	world.buildGroundObject(comand->arguments[0], std::stoi(comand->arguments[1]), std::stoi(comand->arguments[2]), isComplate);
+void Game::build(Command* command ,bool isComplate) {
+	world.buildGroundObject(command->arguments[0], std::stoi(command->arguments[1]), std::stoi(command->arguments[2]), isComplate);
 }
 
-void Game::manufactur(Command* comand) {
-	world.insertManufactur(comand->arguments[0], std::stoi(comand->arguments[1]), std::stoi(comand->arguments[2]));
+void Game::manufactur(Command* command) {
+	if(command->arguments[0]== GroundTransportation::typeToString(GroundTransportationType::Car)||
+		command->arguments[0] == GroundTransportation::typeToString(GroundTransportationType::Truck))
+		world.manufactureGroundTransportation(command->arguments[0], std::stoi(command->arguments[1]), std::stoi(command->arguments[2]));
+	else if (command->arguments[0] == AirTransport::typeToString(AirTransportType::Helicopter))
+	{
+
+	}
+		// Handle Helicopter case
 }
 
-void Game::makeEmpty(Command* comand) {
-	world.makeEmpty(std::stoi(comand->arguments[0]), std::stoi(comand->arguments[1]));
+void Game::makeEmpty(Command* command) {
+	world.makeEmpty(std::stoi(command->arguments[0]), std::stoi(command->arguments[1]));
 }

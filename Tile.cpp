@@ -1,10 +1,10 @@
 #include "Tile.h"
-
-Tile::Tile(int tailNum)
+#include "Car.h"
+Tile::Tile(int tileNum)
 {
-	std::string name = ReadJson::tiles[tailNum];
+	std::string name = ReadJson::tiles[tileNum];
 	tile.first = name;
-	tile.second = tailNum;
+	tile.second = tileNum;
 }
 
 std::vector<int> Tile::selectedResource()
@@ -33,11 +33,31 @@ void Tile::subPeople(int x, int y)
 		peoples.erase(p);
 }
 
-TileResource::TileResource(int tailNum) : Tile(tailNum) {
-	resourceType = ReadJson::tilesResourceType[tile.first];
-	///An initial value determination must be added according to the JSON
-	///resources[resourceType]=readJson start amount of this resource
-	resources [resourceType] = 0;
+void Tile::addCar(int x, int y)
+{
+	//cars[pair<int, int>(x, y)] = GroundTransportation(GroundTransportationType::Car);
+	cars[pair<int, int>(x, y)] = Car();
+}
+
+void Tile::subCar(int x, int y)
+{
+	auto c = trucks.find(std::pair<int, int>(x, y));
+	if (c != trucks.end())
+		trucks.erase(c);
+}
+
+void Tile::addTruk(int x, int y)
+{
+	//trucks[pair<int, int>(x, y)] = GroundTransportation(GroundTransportationType::Car);
+	trucks[pair<int, int>(x, y)] = Truck();
+
+}
+
+void Tile::subTruck(int x, int y)
+{
+	auto t = trucks.find(std::pair<int, int>(x, y));
+	if (t != trucks.end())
+		trucks.erase(t);
 }
 //void TileResource::addResource(int x, int y, int amount)
 //{
@@ -46,6 +66,10 @@ TileResource::TileResource(int tailNum) : Tile(tailNum) {
 //	else
 //		resources[pair<int, int>(x, y)] += amount;
 //}
+TileResource::TileResource(int tileNum):Tile(tileNum)
+{
+	resourceType = ReadJson::tilesResourceType[tile.first];
+}
 void TileResource::addResource(int amount)
 {
 	resources[resourceType] += amount;

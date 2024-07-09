@@ -13,6 +13,9 @@ public:
     static int getVillageCounter();
     void makeEmpty() override;
     void addResource(const std::string& resource, int amount);
+    std::vector<int> selectedResource();
     int getPeopleCount();
+    int getCarCount();
+    int getTruckCount();
 };
 

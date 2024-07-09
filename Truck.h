@@ -1,6 +1,5 @@
 #pragma once
-
-class People
+class Truck
 {
-	
+
 };

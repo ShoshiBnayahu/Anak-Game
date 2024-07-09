@@ -45,10 +45,10 @@
     <ClCompile Include="GroundObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GroundTransportation.cpp">
+    <ClCompile Include="AirTransport.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AirTransport.cpp">
+    <ClCompile Include="GroundTransportation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,10 +95,16 @@
     <ClInclude Include="GroundObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AirTransport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="GroundTransportation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AirTransport.h">
+    <ClInclude Include="Car.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Truck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

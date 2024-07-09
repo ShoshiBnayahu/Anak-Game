@@ -19,6 +19,8 @@ public:
 	Tile* getTile() const { return tile; }
 	GroundObject* getGroundObject() const { return groundObject; }
 	void setGroundObject(GroundObject* c) { groundObject = c; }
+	People* getPeople() const {return people;}
+	void setPeople(People* p) { people = p; }
 	GroundTransportation* getGroundTransportation() const { return groundTransportation; }
 	void setGroundTransportation(GroundTransportation* gt) { groundTransportation = gt; }
     AirTransport* getAirTransport() const { return airTransport; }

@@ -2,6 +2,8 @@
 #include <iostream>
 #include "ReadJson.h"
 #include "People.h"
+#include "Car.h"
+#include "Truck.h"
 
 namespace std {
 	template <>
@@ -22,16 +24,25 @@ protected:
 	const int weight = ReadJson::sizes["Tile"][1];
 	const int height = ReadJson::sizes["Tile"][0];
 	std::unordered_map<std::pair<int, int>, People>peoples;
+	std::unordered_map<std::pair<int, int>, Car> cars;
+	std::unordered_map<std::pair<int, int>, Truck > trucks;
 	std::unordered_map<string, int> resources;
 
 public:
-	Tile(int tailNum);
+	Tile(int tileNum);
 	std::pair<string, int>& getTile() { return tile; };
 	std::vector<int> selectedResource();
 	const std::unordered_map<std::string, int>& getResources() const { return resources; }
 	const std::unordered_map<std::pair<int, int>, People>& getPeople() const { return peoples; }
 	void addPeople(int x, int y);
 	void subPeople(int x, int y);
+	const std::unordered_map<std::pair<int, int>, Car>& getCar() const { return cars; }
+
+	void addCar(int x, int y);
+	void subCar(int x, int y);
+	const std::unordered_map<std::pair<int, int>, Truck>& getTruck() const { return trucks; }
+	void addTruk(int x, int y);
+	void subTruck(int x, int y);
 	virtual ~Tile() {}
 };
 
@@ -39,10 +50,8 @@ class TileResource : public Tile {
 private:
     std::string resourceType;
 public:
-	TileResource(int tailNum);
+	TileResource(int tileNum);
 	std::string getResourceType() { return resourceType; };
 	void addResource( int amount);
 	void subResource(int amount);
-
-
 };

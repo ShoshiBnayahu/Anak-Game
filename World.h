@@ -16,6 +16,11 @@ private:
     std::map<std::string, int> rainsLeft;
     std::vector<GroundObject*> groundObjects;
 
+
+
+    //std::vector<GroundTransportation*> groundTransportations;
+
+
 public:
     // Functions
     void fillTileGrid(const std::vector<std::vector<std::string>>& data);
@@ -31,9 +36,12 @@ public:
     int selectedPeople(std::pair<int, int> cell);
     bool insertPeople(int amount, int x, int y);
     void peopleWork(std::pair<int, int> prev, std::pair<int, int> next);
-    void  insertManufactur(std::string type, int x, int y);
+    //bool isGroundTransportation(std::pair<int, int> cell);
     void rainFall(int amount);
     std::string selectedComplete(std::pair<int, int> cell);
+    bool manufactureGroundTransportation(std::string type, int x, int y);
+    int selectedCar(std::pair<int, int> cell);
+    int selectedTruck(std::pair<int, int> cell);
     int cityCount();
     int villageCount();
     int roadCount();

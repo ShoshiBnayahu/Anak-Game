@@ -148,7 +148,10 @@ bool World::insertResource(int amount, string resource, int x, int y)
 
 std::vector<int> World::selectedResource(std::pair<int, int>cell)
 {
-    return selectTile(cell.first, cell.second)->selectedResource();
+    Settlement* s = isSettlement(cell);
+    if (s) 
+        return s->selectedResource();
+     return selectTile(cell.first, cell.second)->selectedResource();
 }
 
  std::string  World::selectedCategory(std::pair<int, int> cell)
@@ -206,9 +209,62 @@ void World::rainFall(int amount)
     
 }
 
-void World::insertManufactur(std::string type, int x, int y) {
+//bool World::isGroundTransportation(std::pair<int, int> cell) {
+//    if (cellGrid[cell.second - 1][cell.first - 1]->getGrou()) {
+//        Settlement* s = dynamic_cast<Settlement*>(cellGrid[cell.second - 1][cell.first - 1]->getGroundObject());
+//        if (s) {
+//            return s;
+//        }
+//    }
+//    return nullptr;
+//}
+bool World::manufactureGroundTransportation(std::string type , int x, int y)
+{
+   /* bool flag = false;
+    if (cellGrid[y - 1][x - 1]->getGroundTransportation()|| cellGrid[y - 1][x - 1]->getPeople())
+        return false;
+    if (type == GroundTransportation::typeToString(GroundTransportationType::Car)) 
+    {
+        groundTransportations.push_back(new GroundTransportation(x, y, GroundTransportationType::Car));
+        flag = true;
+    }
+    else if (type == GroundTransportation::typeToString(GroundTransportationType::Truck))
+    {
+        groundTransportations.push_back(new GroundTransportation(x, y, GroundTransportationType::Truck));
+        flag = true;
+    }
+    if (flag)
+        cellGrid[y - 1][x - 1]->setGroundTransportation(groundTransportations.back());
+    return flag;*/
 
+    Settlement* s = isSettlement(std::pair<int, int>(x, y));
+    if (s) {
+        s->addResource(type, 1);
+        return true;
+    }
+    Tile* tile = selectTile(x, y);
+    if (type == GroundTransportation::typeToString(GroundTransportationType::Car))
+       tile->addCar(x - 1, y - 1);
+    else if (type == GroundTransportation::typeToString(GroundTransportationType::Truck))
+        tile->addTruk(x - 1, y - 1);
+
+    return true;
 }
+int World::selectedCar(std::pair<int, int>cell)
+{
+    Settlement* s = isSettlement(cell);
+    if (s)
+        return s->getCarCount();
+    return cellGrid[cell.second - 1][cell.first - 1]->getTile()->getCar().size();
+}
+int World::selectedTruck(std::pair<int, int>cell)
+{
+    Settlement* s = isSettlement(cell);
+    if (s)
+        return s->getTruckCount();
+    return cellGrid[cell.second - 1][cell.first - 1]->getTile()->getTruck().size();
+}
+
 
 int World::cityCount()
 {
@@ -229,6 +285,4 @@ void World::makeEmpty(int x, int y) {
     if (cellGrid[y - 1][x - 1]->getGroundObject())
         cellGrid[y - 1][x - 1]->getGroundObject()->makeEmpty();
 }
-
-
 
