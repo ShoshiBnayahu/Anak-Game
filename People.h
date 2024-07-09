@@ -1,6 +1,7 @@
 #pragma once
 
-class People
+class People :public Resource
 {
-	
+
+
 };

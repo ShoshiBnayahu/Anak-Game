@@ -9,14 +9,7 @@ void World::fillTileGrid(const std::vector<std::vector<std::string>>& data)
     {
         tileGrid.push_back(std::vector<Tile*>());
         for (size_t j = 0; j < data[i].size(); j++)
-        {
-            //אם אין לו סוג משאב מיחד לו
-            if (ReadJson::tilesResourceType.find(ReadJson::tiles[std::stoi(data[i][j])])== ReadJson::tilesResourceType.end())
-                tileGrid[i].push_back(new Tile(std::stoi(data[i][j])));
-            else
-                tileGrid[i].push_back(new TileResource(std::stoi(data[i][j])));
-
-        }
+              tileGrid[i].push_back(new Tile(std::stoi(data[i][j])));
     }
 }
 
@@ -129,84 +122,139 @@ std::string World::selectedComplete(std::pair<int, int> cell)
 //    amount.pop_back();
 //    return amount;
 //}
-
-bool World::insertResource(int amount, string resource, int x, int y)
+Coordinate* World::getCell(std::pair<int, int>cell)
 {
-    Settlement* s = isSettlement(std::pair<int, int>(x, y));
-        if (s) {
-            s->addResource(resource, amount);
-            return true;
-        }
-    Tile* t = selectTile(x, y);
-    TileResource* tr = dynamic_cast<TileResource*>(t);
-    if (!tr|| tr->getResourceType() != resource) {
-        return false;
+    return cellGrid[cell.second - 1][cell.first - 1];
+}
+Coordinate* World::getCell(int x,int y)
+{
+    return cellGrid[y - 1][x - 1];
+}
+void World::insertResource(int amount, string resource, int x, int y)
+{
+    Coordinate* currentCell = getCell(x,y);
+    if (currentCell->getPeople()){
+        currentCell->getPeople()->addResource(resource, amount);
+        return;
     }
-    tr->addResource(amount);
-    return true;
+    if (currentCell->getGroundTransportation()){
+        currentCell->getGroundTransportation()->addResource(resource, amount);
+        return;
+    }
+    if (currentCell->getAirTransport()) {
+        currentCell->getAirTransport()->addResource(resource, amount);
+        return;
+    }
+    Settlement* s = isSettlement(std::pair<int, int>(x, y));
+    if (s) {
+        s->addResource(resource, amount);
+        return;
+    }
+    currentCell->getTile()->addResource(resource, amount);
 }
 
 std::vector<int> World::selectedResource(std::pair<int, int>cell)
 {
+    Coordinate* currentCell = getCell(cell);
+    if (currentCell->getPeople())
+       return currentCell->getPeople()->selectedResource();
+    if (currentCell->getGroundTransportation())
+        return currentCell->getGroundTransportation()->selectedResource();
+    if (currentCell->getAirTransport())
+        return currentCell->getAirTransport()->selectedResource();
     Settlement* s = isSettlement(cell);
     if (s) 
         return s->selectedResource();
-     return selectTile(cell.first, cell.second)->selectedResource();
+     return currentCell->getTile()->selectedResource();
 }
-
+ 
  std::string  World::selectedCategory(std::pair<int, int> cell)
 {
-    if (cellGrid[cell.second - 1][cell.first - 1]->getGroundObject() )
-        return GroundObject::typeToString(cellGrid[cell.second - 1][cell.first - 1]->getGroundObject()->getType());
-    return  cellGrid[cell.second - 1][cell.first - 1]->getTile()->getTile().first;
+    if (getCell(cell)->getGroundObject() )
+        return GroundObject::typeToString(getCell(cell)->getGroundObject()->getType());
+    return  getCell(cell)->getTile()->getTile().first;
 }
 
- bool World::insertPeople(int amount, int x, int y)
- {
-     Settlement* s = isSettlement(std::pair<int,int>(x,y));
-         if (s) {
-             s->addResource("People", amount);
-             return true;
-         }
-    Tile* tile = selectTile(x, y);
-    tile->addPeople(x - 1, y - 1);
-    return true;
+bool World::insertPeople(int amount, int x, int y){
+    getCell(x, y)->setPeople(new People());
+    Settlement* s = isSettlement(std::pair<int, int>(x, y));
+    if (s)
+        s->addPeople(amount);
+    else
+        getCell(x, y)->getTile()->addPeople(amount);
+
+}
+
+bool World::manufactureGroundTransportation(std::string type, int x, int y)
+{
+    bool flag = false;
+    Coordinate* currentCell = getCell(x,y);
+    Settlement* s = isSettlement(std::pair<int, int>(x, y));
+   /* if (currentCell->getGroundTransportation() || currentCell->getPeople())
+        return false;*/
+    if (type == GroundTransportation::typeToString(GroundTransportationType::Car))
+    {
+        currentCell->setGroundTransportation( new GroundTransportation(GroundTransportationType::Car));
+        ///להגדיר את כל הקורדיננטות הנדרשות לפי הגודל
+        if (s)
+            s->addCar(1);
+        else
+            currentCell->getTile()->addCar(1);
+        flag = true;
+    }
+    else if (type == GroundTransportation::typeToString(GroundTransportationType::Truck))
+    {
+        currentCell->setGroundTransportation(new GroundTransportation(GroundTransportationType::Truck));
+        ///להגדיר את כל הקורדיננטות הנדרשות לפי הגודל
+        if (s)
+            s->addTruck(1);
+        else
+            currentCell->getTile()->addTruck(1);
+        flag = true;
+    }
+    return flag;
 }
 
 void World::peopleWork(std::pair<int, int> prev, std::pair<int, int> next)
 {
-    selectTile(prev.first, prev.second)->subPeople(prev.first - 1, prev.second - 1);
-    Tile* newTile = selectTile(next.first, next.second);
-    newTile->addPeople(next.first - 1, next.second - 1);
-    ((TileResource*)newTile)->subResource(1);
+    Coordinate* prevCell = getCell(prev);
+    Coordinate* nextCell = getCell(next);
+    nextCell->setPeople(prevCell->getPeople());
+    prevCell->setPeople(nullptr);
+    Settlement* s= isSettlement(prev);
+    if (s)
+        s->subPeople(1);
+    else
+        prevCell->getTile()->subPeople(1);
+    nextCell->getTile()->addPeople(1);
+    std::string resourceType = ReadJson::tilesResourceType[nextCell->getTile()->getTile().first];
+    nextCell->getTile()->subResource(resourceType,1);
 }
 
 int World::selectedPeople(std::pair<int, int>cell)
 {
   Settlement* s = isSettlement(cell);
         if (s)
-            return s->getPeopleCount();
-    return cellGrid[cell.second - 1][cell.first - 1]->getTile()->getPeople().size();
+            return s->getPeoples();
+    return getCell(cell)->getTile()->getPeoples();
 }
 
 void World::rainFall(int amount)
 {
     std::string resourceName;
+    std::string resourceType;
     for (int i = 0; i < tileGrid.size(); i++)
         for (int j = 0; j < tileGrid[0].size(); j++)
         {
-            TileResource* tileResourcePtr = dynamic_cast<TileResource*>(tileGrid[i][j]);
-            if (tileResourcePtr) {
-                resourceName = tileResourcePtr->getResourceType();
-                if (ReadJson::rains.find(resourceName) != ReadJson::rains.end()) 
-                    tileResourcePtr->addResource((amount + rainsLeft[resourceName]) /
-                        ReadJson::rains[resourceName]);
-                    
+            resourceName = tileGrid[i][j]->getTile().first;
+            if (ReadJson::tilesResourceType.find(resourceName) != ReadJson::tilesResourceType.end()) {
+                resourceType = ReadJson::tilesResourceType[resourceName];
+                if (ReadJson::rains.find(resourceType) != ReadJson::rains.end())
+                    tileGrid[i][j]->addResource(resourceType, (amount + rainsLeft[resourceName]) / ReadJson::rains[resourceName]);
             }
         }
     for (auto rl : rainsLeft) 
-        rl.second =( amount + rl.second) % ReadJson::rains[rl.first];
-    
+        rl.second =( amount + rl.second) % ReadJson::rains[rl.first]; 
 }
 
 //bool World::isGroundTransportation(std::pair<int, int> cell) {
@@ -218,38 +266,7 @@ void World::rainFall(int amount)
 //    }
 //    return nullptr;
 //}
-bool World::manufactureGroundTransportation(std::string type , int x, int y)
-{
-   /* bool flag = false;
-    if (cellGrid[y - 1][x - 1]->getGroundTransportation()|| cellGrid[y - 1][x - 1]->getPeople())
-        return false;
-    if (type == GroundTransportation::typeToString(GroundTransportationType::Car)) 
-    {
-        groundTransportations.push_back(new GroundTransportation(x, y, GroundTransportationType::Car));
-        flag = true;
-    }
-    else if (type == GroundTransportation::typeToString(GroundTransportationType::Truck))
-    {
-        groundTransportations.push_back(new GroundTransportation(x, y, GroundTransportationType::Truck));
-        flag = true;
-    }
-    if (flag)
-        cellGrid[y - 1][x - 1]->setGroundTransportation(groundTransportations.back());
-    return flag;*/
 
-    Settlement* s = isSettlement(std::pair<int, int>(x, y));
-    if (s) {
-        s->addResource(type, 1);
-        return true;
-    }
-    Tile* tile = selectTile(x, y);
-    if (type == GroundTransportation::typeToString(GroundTransportationType::Car))
-       tile->addCar(x - 1, y - 1);
-    else if (type == GroundTransportation::typeToString(GroundTransportationType::Truck))
-        tile->addTruk(x - 1, y - 1);
-
-    return true;
-}
 int World::selectedCar(std::pair<int, int>cell)
 {
     Settlement* s = isSettlement(cell);
@@ -264,7 +281,6 @@ int World::selectedTruck(std::pair<int, int>cell)
         return s->getTruckCount();
     return cellGrid[cell.second - 1][cell.first - 1]->getTile()->getTruck().size();
 }
-
 
 int World::cityCount()
 {
@@ -282,7 +298,7 @@ int World::roadCount()
 }
 
 void World::makeEmpty(int x, int y) {
-    if (cellGrid[y - 1][x - 1]->getGroundObject())
-        cellGrid[y - 1][x - 1]->getGroundObject()->makeEmpty();
+   /* if (cellGrid[y - 1][x - 1]->getGroundObject())
+        cellGrid[y - 1][x - 1]->getGroundObject()->makeEmpty();*/
 }
 

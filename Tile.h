@@ -1,9 +1,8 @@
 #pragma once
 #include <iostream>
 #include "ReadJson.h"
-#include "People.h"
-#include "Car.h"
-#include "Truck.h"
+#include "Resource.h"
+
 
 namespace std {
 	template <>
@@ -16,42 +15,52 @@ namespace std {
    };
 }
 
-class Tile
+class Tile:public Resource
 {
 protected:
 
 	std::pair<std::string, int> tile;
-	const int weight = ReadJson::sizes["Tile"][1];
-	const int height = ReadJson::sizes["Tile"][0];
-	std::unordered_map<std::pair<int, int>, People>peoples;
-	std::unordered_map<std::pair<int, int>, Car> cars;
-	std::unordered_map<std::pair<int, int>, Truck > trucks;
+	/*const int weight = ReadJson::sizes["Tile"][1];
+	const int height = ReadJson::sizes["Tile"][0];*/
+	int peoples = 0;
+	int cars = 0;
+	int trucks = 0;
+	int helicopters = 0;
 	std::unordered_map<string, int> resources;
 
 public:
 	Tile(int tileNum);
 	std::pair<string, int>& getTile() { return tile; };
-	std::vector<int> selectedResource();
-	const std::unordered_map<std::string, int>& getResources() const { return resources; }
-	const std::unordered_map<std::pair<int, int>, People>& getPeople() const { return peoples; }
-	void addPeople(int x, int y);
+	void addPeople(int amount);
+	void subPeople(int amount);
+	int getPeoples() const { return peoples; }
+	void addCar(int amount);
+	int getCars() const { return cars; }
+	void addTruck(int amount);
+	int getTrucks() const { return trucks; }
+	void addHelicopter(int amount);
+	int getHelicopters() const { return helicopters; }
+	//std::vector<int> selectedResource();
+	//const std::unordered_map<std::string, int>& getResources() const { return resources; }
+	//const std::unordered_map<std::pair<int, int>, People>& getPeople() const { return peoples; }
+	/*void addPeople(int x, int y);
 	void subPeople(int x, int y);
-	const std::unordered_map<std::pair<int, int>, Car>& getCar() const { return cars; }
+	const std::unordered_map<std::pair<int, int>, Car>& getCar() const { return cars; }*/
 
-	void addCar(int x, int y);
-	void subCar(int x, int y);
-	const std::unordered_map<std::pair<int, int>, Truck>& getTruck() const { return trucks; }
-	void addTruk(int x, int y);
-	void subTruck(int x, int y);
+	//void addCar(int x, int y);
+	//void subCar(int x, int y);
+	//const std::unordered_map<std::pair<int, int>, Truck>& getTruck() const { return trucks; }
+	//void addTruk(int x, int y);
+	//void subTruck(int x, int y);
 	virtual ~Tile() {}
 };
-
-class TileResource : public Tile {
-private:
-    std::string resourceType;
-public:
-	TileResource(int tileNum);
-	std::string getResourceType() { return resourceType; };
-	void addResource( int amount);
-	void subResource(int amount);
-};
+//
+//class TileResource : public Tile {
+//private:
+//    std::string resourceType;
+//public:
+//	TileResource(int tileNum);
+//	std::string getResourceType() { return resourceType; };
+//	void addResource( int amount);
+//	void subResource(int amount);
+//};

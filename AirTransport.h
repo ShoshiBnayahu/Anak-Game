@@ -4,17 +4,18 @@ enum class AirTransportType {
 	Helicopter
 };
 
-class AirTransport
+class AirTransport :public Resource
 {
 protected:
 	AirTransportType type;
-	std::pair<int, int> location;
+	//std::pair<int, int> location;
 
 
 public:
-	AirTransport(int x, int y, AirTransportType t);
+	AirTransport( AirTransportType t);
 	AirTransportType  getType() const { return type; }
-	std::pair<int, int> getLocation() const { return location; }
+	void addResource(std::string resource, int amount) override;
+	//std::pair<int, int> getLocation() const { return location; }
 	static std::string typeToString(AirTransportType type);
 
 };

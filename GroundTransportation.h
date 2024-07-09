@@ -6,7 +6,7 @@ enum class GroundTransportationType {
 	Truck
 };
 
-class GroundTransportation
+class GroundTransportation :public Resource
 {
 protected:
 	GroundTransportationType type;
@@ -19,6 +19,7 @@ public:
 	//GroundTransportation(int x, int y, GroundTransportationType t);
 	GroundTransportationType  getType() const { return type; }
 	void setType(GroundTransportationType t) { type = t; }
+	void addResource(std::string resource, int amount) override;
 	//std::pair<int, int> getLocation() const { return location; }
 	static std::string typeToString(GroundTransportationType type);
 

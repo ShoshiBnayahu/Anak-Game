@@ -15,10 +15,10 @@ private:
     std::vector<std::vector<Coordinate*>> cellGrid;
     std::map<std::string, int> rainsLeft;
     std::vector<GroundObject*> groundObjects;
-
-
-
     //std::vector<GroundTransportation*> groundTransportations;
+    //std::vector<AirTransport*> airTransports;
+    //std::vector<People*> peoples;
+
 
 
 public:
@@ -27,10 +27,12 @@ public:
     void fillCellGrid();
     void buildGroundObject(std::string type, int x, int y, bool isComplete);
     Settlement* isSettlement(std::pair<int, int> cell);
+    Coordinate* getCell(std::pair<int, int>cell);
+    Coordinate* getCell(int x,int y);
     bool canBuild(int x, int y, int sizeX, int sizeY);
     std::vector<std::vector<Tile*>>& getGrid() { return tileGrid; }
     Tile*& selectTile(int x, int y);
-    bool insertResource(int amount, std::string resource, int x, int y);
+    void insertResource(int amount, std::string resource, int x, int y);
     std::vector<int> selectedResource(std::pair<int, int> cell);
     std::string selectedCategory(std::pair<int, int> cell);
     int selectedPeople(std::pair<int, int> cell);
