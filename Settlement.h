@@ -17,7 +17,6 @@ public:
     static int getVillageCounter();
     void makeEmpty() override;
     void addResource( std::string resource, int amount) override;
-    std::vector<int> selectedResource();
     void addPeople(int amount);
     void subPeople(int amount);
     int getPeoples() const { return peoples; }

@@ -1,4 +1,4 @@
-#include "ReadJson.cpp"
+#include "ReadJson.h"
 #include "Resource.h"
 
 std::vector<int> Resource::selectedResource()
@@ -10,17 +10,22 @@ std::vector<int> Resource::selectedResource()
 		else
 			amount.push_back(0);
 	}
-	//pop the people resource 
+	//pop the people resource
 	amount.pop_back();
 	return amount;
 }
-
 void Resource::addResource(std::string resourceType, int amount)
 {
 	resources[resourceType] += amount;
 }
-
-void Resource::subResource(std::string resourceType,int amount)
+void Resource::subResource(std::string resourceType, int amount)
 {
 	resources[resourceType] -= amount;
+}
+
+void Resource::makeEmpty()
+{
+	for (auto r : resources) {
+		r.second = 0;
+	}
 }

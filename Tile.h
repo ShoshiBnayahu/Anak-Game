@@ -35,10 +35,13 @@ public:
 	void subPeople(int amount);
 	int getPeoples() const { return peoples; }
 	void addCar(int amount);
+	void subCar(int amount);
 	int getCars() const { return cars; }
 	void addTruck(int amount);
+	void subTruck(int amount);
 	int getTrucks() const { return trucks; }
 	void addHelicopter(int amount);
+	void subHelicopter(int amount);
 	int getHelicopters() const { return helicopters; }
 	//std::vector<int> selectedResource();
 	//const std::unordered_map<std::string, int>& getResources() const { return resources; }

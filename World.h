@@ -38,6 +38,8 @@ public:
     int selectedPeople(std::pair<int, int> cell);
     bool insertPeople(int amount, int x, int y);
     void peopleWork(std::pair<int, int> prev, std::pair<int, int> next);
+    void deposit(std::pair<int, int> prev, std::pair<int, int> next);
+    void takeResources(std::pair<int, int> prev, std::pair<int, int> next);
     //bool isGroundTransportation(std::pair<int, int> cell);
     void rainFall(int amount);
     std::string selectedComplete(std::pair<int, int> cell);

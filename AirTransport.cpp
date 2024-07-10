@@ -1,7 +1,14 @@
 #include "AirTransport.h"
-
-AirTransport::AirTransport(int x, int y, AirTransportType t) :location(std::make_pair(x, y)), type(t) {}
-
+AirTransport::AirTransport(AirTransportType t) : type(t) {}
+void AirTransport::addResource(std::string resource, int amount)
+{
+	if (resources.find(resource) != resources.end()) {
+		resources[resource] = std::min(resources[resource] + amount, ReadJson::capacities[typeToString(type)][ReadJson::resourceTypes[resource]]);
+	}
+	else {
+		resources[resource] = std::min(amount, ReadJson::capacities[typeToString(type)][ReadJson::resourceTypes[resource]]);
+	}
+}
 std::string  AirTransport::typeToString(AirTransportType type)
 {
 	switch (type) {

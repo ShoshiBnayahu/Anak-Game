@@ -27,4 +27,6 @@ public:
 	void build(Command* comand, bool isComplate);
 	void manufactur(Command* comand);
 	void makeEmpty(Command* comand);
+	void deposit(Command* command);
+	void takeResource(Command* command);
 };

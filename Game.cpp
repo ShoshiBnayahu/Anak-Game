@@ -51,6 +51,10 @@ void Game::selectStartCommand(const std::shared_ptr<Command>& cmd)
 		manufactur(cmd.get());
 	else if (cmd.get()->name == Command::MAKE_EMPTY)
 		makeEmpty(cmd.get());
+	else if (cmd.get()->name == Command::DEPOSIT)
+		deposit(cmd.get());
+	else if (cmd.get()->name == Command::TAKE_RESOURCES)
+		takeResource(cmd.get());
 }
 
 void Game::selectInputCommand(const std::shared_ptr<Command>& cmd)
@@ -71,6 +75,10 @@ void Game::selectInputCommand(const std::shared_ptr<Command>& cmd)
 		manufactur(cmd.get());
 	else if (cmd.get()->name == Command::MAKE_EMPTY)
 		makeEmpty(cmd.get());
+	else if (cmd.get()->name == Command::DEPOSIT)
+		deposit(cmd.get());
+	else if (cmd.get()->name == Command::TAKE_RESOURCES)
+		takeResource(cmd.get());
 
 }
 
@@ -155,4 +163,14 @@ void Game::manufactur(Command* command) {
 
 void Game::makeEmpty(Command* command) {
 	world.makeEmpty(std::stoi(command->arguments[0]), std::stoi(command->arguments[1]));
+}
+
+void Game::deposit(Command* command)
+{
+	world.deposit(cell, std::pair<int, int>(std::stoi(command->arguments[0]), std::stoi(command->arguments[1])));
+}
+
+void Game::takeResource(Command* command)
+{
+	world.takeResources(cell, std::pair<int, int>(std::stoi(command->arguments[0]), std::stoi(command->arguments[1])));
 }
