@@ -2,7 +2,7 @@
 int Settlement::cityCounter=0;
 int Settlement::villageCounter=0;
 
-Settlement::Settlement(int x, int y, GroundObjectType type, bool isComplete) : GroundObject(x, y, type, isComplete) {
+Settlement::Settlement( GroundObjectType type, bool isComplete,std::pair<int,int>l) : GroundObject(type, isComplete, l) {
     if (type == GroundObjectType::Road) {
         throw std::invalid_argument("Invalid type: Cannot create Settlement with type Road");
     }

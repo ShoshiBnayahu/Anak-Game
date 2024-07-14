@@ -12,7 +12,7 @@ private:
     //std::unordered_map<std::string, int> resources;
 
 public:
-    Settlement(int x, int y, GroundObjectType type, bool isComplete);
+    Settlement( GroundObjectType type, bool isComplete,std::pair<int,int>l);
     static int getCityCounter();
     static int getVillageCounter();
     void makeEmpty() override;

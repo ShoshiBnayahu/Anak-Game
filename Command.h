@@ -33,5 +33,6 @@ public:
     static const std::string RAIN;
     static const std::string ROBBER;
     static const std::string MAKE_ROBBER;
+    static const std::string SET_POINTS;
 };
 

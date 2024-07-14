@@ -15,7 +15,13 @@
     "Village": 1,
     "City": 5
   },
-  "ResourceTypes": [ "Wood", "Wool", "Iron", "Blocks", "People" ],
+  "ResourceTypes": [
+    "Wood",
+    "Wool",
+    "Iron",
+    "Blocks",
+    "People"
+  ],
   "Costs": {
     "Road": [ 0, 0, 0, 5, 1 ],
     "Village": [ 10, 10, 0, 5, 10 ],

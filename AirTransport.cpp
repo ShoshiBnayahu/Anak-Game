@@ -1,5 +1,11 @@
 #include "AirTransport.h"
-AirTransport::AirTransport(AirTransportType t) : type(t) {}
+int AirTransport::helicopterCounter = 0;
+
+AirTransport::AirTransport(AirTransportType t, std::pair<int, int>l) :Location(l), type(t) {
+	if (type == AirTransportType::Helicopter)
+		helicopterCounter++;
+}
+
 void AirTransport::addResource(std::string resource, int amount)
 {
 	if (resources.find(resource) != resources.end()) {
@@ -17,4 +23,7 @@ std::string  AirTransport::typeToString(AirTransportType type)
 	default:
 		return "Unknown";
 	}
+}
+int AirTransport::getHelicopterCounter() {
+	return helicopterCounter;
 }

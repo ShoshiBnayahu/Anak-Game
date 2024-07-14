@@ -8,6 +8,11 @@ void Game::startGame()
 	readCommand();
 }
 
+void Game::setPoints(int amount) {
+	points = std::min(points + amount, 100);
+}
+
+
 void Game::readCommand()
 {
 	readStartCommand();
@@ -48,13 +53,17 @@ void Game::selectStartCommand(const std::shared_ptr<Command>& cmd)
 	else if (cmd.get()->name == Command::WORK)
 		work(cmd.get());
 	else if (cmd.get()->name == Command::MANUFACTURE)
-		manufactur(cmd.get());
+		manufactur(cmd.get(),true);
 	else if (cmd.get()->name == Command::MAKE_EMPTY)
 		makeEmpty(cmd.get());
 	else if (cmd.get()->name == Command::DEPOSIT)
 		deposit(cmd.get());
+	else if (cmd.get()->name == Command::RESOURCES)
+		resources(cmd.get());
 	else if (cmd.get()->name == Command::TAKE_RESOURCES)
 		takeResource(cmd.get());
+	else if (cmd.get()->name == Command::SET_POINTS)
+		setPoints(std::stoi( cmd.get()->arguments[0]));
 }
 
 void Game::selectInputCommand(const std::shared_ptr<Command>& cmd)
@@ -72,11 +81,15 @@ void Game::selectInputCommand(const std::shared_ptr<Command>& cmd)
 	else if (cmd.get()->name == Command::WORK)
 		work(cmd.get());
 	else if (cmd.get()->name == Command::MANUFACTURE)
-		manufactur(cmd.get());
+		manufactur(cmd.get(),false);
 	else if (cmd.get()->name == Command::MAKE_EMPTY)
 		makeEmpty(cmd.get());
 	else if (cmd.get()->name == Command::DEPOSIT)
 		deposit(cmd.get());
+	else if (cmd.get()->name == Command::RESOURCES)
+		resources(cmd.get());
+	else if (cmd.get()->name == Command::MOVE)
+		move(cmd.get());
 	else if (cmd.get()->name == Command::TAKE_RESOURCES)
 		takeResource(cmd.get());
 
@@ -105,6 +118,9 @@ void Game::selectAssertCommand(const string& cmd)
 	else if (cmd == "SelectedTruck")
 		cout << "SelectedTruck " << world.selectedTruck(cell) << endl;
 
+	else if(cmd=="SelectedCoordinates")
+		cout << "SelectedCoordinates " <<lastMove.first << " "<< lastMove.second<<  endl;
+
 	else if (cmd == "CityCount")
 		cout << "CityCount " << world.cityCount() <<std::endl;
 
@@ -113,6 +129,22 @@ void Game::selectAssertCommand(const string& cmd)
 
 	else if (cmd == "RoadCount")
 		cout << "RoadCount " << world.roadCount() << std::endl;
+
+	else if (cmd == "CarCount")
+		cout << "CarCount " << world.carCount() << std::endl;
+
+	else if (cmd == "TruckCount")
+		cout << "TruckCount " << world.truckCount() << std::endl;
+
+	else if (cmd == "HelicopterCount")
+		cout << "HelicopterCount " << world.hlicopterCount() << std::endl;
+
+	else if (cmd == "HelicopterCount")
+		cout << "HelicopterCount " << world.hlicopterCount() << std::endl;
+
+	else if (cmd == "Points")
+		cout << "Points " << points << std::endl;
+
 }
 
 void Game::resource(Command* command)
@@ -120,14 +152,14 @@ void Game::resource(Command* command)
 	world.insertResource(std::stoi(command->arguments[0]), command->arguments[1], std::stoi(command->arguments[2]), std::stoi(command->arguments[3]));
 }
 
-void Game::people(Command* comand)
+void Game::people(Command* command)
 {
-	world.insertPeople(std::stoi(comand->arguments[0]), std::stoi(comand->arguments[1]), std::stoi(comand->arguments[2]));
+	world.insertPeople(std::stoi(command->arguments[0]), std::stoi(command->arguments[1]), std::stoi(command->arguments[2]));
 }
 
-void Game::select(Command* comand)
+void Game::select(Command* command)
 {
-	cell = std::pair<int, int>(std::stoi(comand->arguments[0]), std::stoi(comand->arguments[1]));
+	cell = std::pair<int, int>(std::stoi(command->arguments[0]), std::stoi(command->arguments[1]));
 
 }
 
@@ -147,18 +179,11 @@ void Game::rain(Command* command)
 }
 
 void Game::build(Command* command ,bool isComplate) {
-	world.buildGroundObject(command->arguments[0], std::stoi(command->arguments[1]), std::stoi(command->arguments[2]), isComplate);
+	setPoints(world.buildGroundObject(command->arguments[0], std::stoi(command->arguments[1]), std::stoi(command->arguments[2]), isComplate));
 }
 
-void Game::manufactur(Command* command) {
-	if(command->arguments[0]== GroundTransportation::typeToString(GroundTransportationType::Car)||
-		command->arguments[0] == GroundTransportation::typeToString(GroundTransportationType::Truck))
-		world.manufactureGroundTransportation(command->arguments[0], std::stoi(command->arguments[1]), std::stoi(command->arguments[2]));
-	else if (command->arguments[0] == AirTransport::typeToString(AirTransportType::Helicopter))
-	{
-
-	}
-		// Handle Helicopter case
+void Game::manufactur(Command* command,bool chekResource) {
+	world.manufacture(command->arguments[0], std::stoi(command->arguments[1]), std::stoi(command->arguments[2]), chekResource);
 }
 
 void Game::makeEmpty(Command* command) {
@@ -173,4 +198,19 @@ void Game::deposit(Command* command)
 void Game::takeResource(Command* command)
 {
 	world.takeResources(cell, std::pair<int, int>(std::stoi(command->arguments[0]), std::stoi(command->arguments[1])));
+}
+
+void Game::resources(Command* command) {
+	world.insertResources(std::vector<int>{std::stoi(command->arguments[0]),
+		std::stoi(command->arguments[1]),
+		std::stoi(command->arguments[2]),
+		std::stoi(command->arguments[3]) },
+		            std::stoi(command->arguments[4]),
+		            std::stoi(command->arguments[5]));
+
+}
+
+void Game::move(Command* command)
+{
+	lastMove=world.move(cell, std::pair<int, int>(std::stoi(command->arguments[0]), std::stoi(command->arguments[1])));
 }

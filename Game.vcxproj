@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="AirTransport.cpp" />
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="GroundTransportation.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GroundObject.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="AirTransport.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="Location.h" />
     <ClInclude Include="People.h" />
     <ClInclude Include="ReadJson.h" />
     <ClInclude Include="Resource.h" />

@@ -3,12 +3,13 @@
 
 std::vector<int> Resource::selectedResource()
 {
-	std::vector<int> amount;
+	std::vector<int> amount(ReadJson::resourceTypes.size());
+
 	for (const auto& res : ReadJson::resourceTypes) {
 		if (resources.find(res.first) != resources.end())
-			amount.push_back(resources.at(res.first));
+			amount[res.second] = resources.at(res.first);
 		else
-			amount.push_back(0);
+			amount[res.second] = 0;
 	}
 	//pop the people resource
 	amount.pop_back();
@@ -22,7 +23,6 @@ void Resource::subResource(std::string resourceType, int amount)
 {
 	resources[resourceType] -= amount;
 }
-
 void Resource::makeEmpty()
 {
 	for (auto r : resources) {

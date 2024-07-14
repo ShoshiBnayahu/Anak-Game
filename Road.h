@@ -7,7 +7,7 @@ private:
 	static int roadCounter;
 
 public:
-	Road(int x, int y, GroundObjectType type, bool isComplate);
+	Road(GroundObjectType type, bool isComplate,std::pair<int,int>l);
 	static int getRoadCounter() { return roadCounter; }
 	void makeEmpty()override{}
 };

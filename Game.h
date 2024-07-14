@@ -9,7 +9,13 @@ private:
 	Input input;
 	World world;
 	std::pair<int, int> cell;
+	std::pair<int, int> lastMove;
+	int points;
+
 public:
+	Game() :points(0){}
+	int getPoints()const { return points; }
+	void setPoints(int amount);
 	void startGame();
 	void readCommand();
 	void readStartCommand();
@@ -25,8 +31,12 @@ public:
 	void work(Command* comand);
 	void rain(Command* comand);
 	void build(Command* comand, bool isComplate);
-	void manufactur(Command* comand);
-	void makeEmpty(Command* comand);
+    void manufactur(Command* comand,bool chekResource);
+	//void manufactur(Command* command);
+	void makeEmpty(Command* command);
 	void deposit(Command* command);
 	void takeResource(Command* command);
+	void resources(Command* command);
+	void move(Command* command);
+
 };

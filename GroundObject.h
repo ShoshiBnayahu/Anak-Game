@@ -1,12 +1,14 @@
 #pragma once
 #include "Tile.h"
+#include "Location.h"
+
 enum class GroundObjectType {
     City,
     Village,
 	Road
 };
 
-class GroundObject
+class GroundObject:public Location
 {
 protected:
 	GroundObjectType type;
@@ -14,7 +16,7 @@ protected:
 	bool isComplate;
 
 public:
-	GroundObject(int x, int y, GroundObjectType t, bool isComplate);
+	GroundObject(GroundObjectType t, bool isComplate, std::pair<int, int>l);
 	GroundObjectType  getType() const { return type; }
 	virtual void makeEmpty() = 0;
 	std::pair<int, int> getLocation() const { return location; }

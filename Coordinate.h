@@ -6,6 +6,13 @@
 #include "GroundTransportation.h"
 #include "AirTransport.h"
 
+enum class ObjectType {
+    GroundObject,
+    People,
+    GroundTransportation,
+    AirTransport
+};
+
 class Coordinate
 {
 private:
@@ -15,8 +22,12 @@ private:
 	GroundTransportation* groundTransportation;
 	AirTransport* airTransport;
 public:
-	Coordinate(Tile * t): tile(t) {}
-	Tile* getTile() const { return tile; }
+	Coordinate(Tile* t) : tile(t) {
+		groundObject = nullptr;
+		people = nullptr;
+		groundTransportation = nullptr;
+		airTransport = nullptr;
+	}	Tile* getTile() const { return tile; }
 	GroundObject* getGroundObject() const { return groundObject; }
 	void setGroundObject(GroundObject* c) { groundObject = c; }
 	People* getPeople() const {return people;}
@@ -25,6 +36,7 @@ public:
 	void setGroundTransportation(GroundTransportation* gt) { groundTransportation = gt; }
     AirTransport* getAirTransport() const { return airTransport; }
     void setAirTransport(AirTransport* at) { airTransport = at; }
-        
+	void setObject(ObjectType type, Location* obj);
 
 };
+
